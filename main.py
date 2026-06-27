@@ -1,4 +1,4 @@
-from database import inicializar_db
+from database.database import inicializar_db
 from gui import App
 
 

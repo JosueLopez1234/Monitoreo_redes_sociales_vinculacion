@@ -13,7 +13,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from tkinter import filedialog, messagebox
-from database import obtener_ultimo_registro
+from database.database import obtener_ultimo_registro
 import os
 
 def generar_pdf(red):
@@ -49,7 +49,7 @@ def generar_pdf(red):
     elementos.append(Spacer(1, 20))
 
     # ───────────────── LOGO ─────────────────
-    logo_path = "logo_uleam.png"  # cambia si está en otra carpeta
+    logo_path = "imagenes/logo_uleam.png"  # cambia si está en otra carpeta
 
     if os.path.exists(logo_path):
         logo = Image(logo_path, width=200, height=100)

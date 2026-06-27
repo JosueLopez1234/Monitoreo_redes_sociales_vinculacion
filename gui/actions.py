@@ -1,0 +1,88 @@
+"""
+gui/actions.py
+Mixin con los botones de la ventana principal y las acciones que disparan:
+  - Guardar registro
+  - Ver gráfica
+  - Ver/editar historial
+  - Limpiar campos
+  - Generar PDF
+"""
+import tkinter as tk
+from tkinter import messagebox
+
+from database.database import guardar_registro
+from services.graficas import VentanaGrafica
+from services.reportes import generar_pdf
+from theme import (
+    BG_DARK, BG_INPUT, GREEN, BLUE, GRAY,
+    CARRERAS, FONT_BTN,
+)
+
+
+class ActionsMixin:
+    """Botones de la barra de acciones y sus handlers."""
+
+    # ── Barra de botones ──────────────────────────────────────────────────────
+    def _construir_botones(self):
+        frame_btn = tk.Frame(self, bg=BG_DARK)
+        frame_btn.pack(pady=10)
+
+        def btn(texto, cmd, color, fg="white"):
+            return tk.Button(
+                frame_btn, text=texto, command=cmd,
+                bg=color, fg=fg, relief="flat",
+                font=FONT_BTN, padx=16, pady=8, cursor="hand2",
+                activebackground=BG_INPUT, activeforeground="white",
+            )
+
+        btn("💾  Guardar registro",       self._guardar,        GREEN   ).pack(side="left", padx=8)
+        btn("📊  Ver gráfica",            self._ver_grafica,    BLUE    ).pack(side="left", padx=8)
+        btn("📋  Ver / Editar historial", self._ver_historial,  "#5B4FBE").pack(side="left", padx=8)
+        btn("🗑️  Limpiar campos",         self._limpiar,        GRAY    ).pack(side="left", padx=8)
+        btn("📄  Generar PDF",            self._generar_pdf,    "#c0392b").pack(side="left", padx=8)
+
+    # ── Guardar registro ──────────────────────────────────────────────────────
+    def _guardar(self):
+        red = self.var_red.get()
+        try:
+            valores = {c: int(self.entries[c].get()) for c in CARRERAS}
+        except ValueError:
+            messagebox.showerror(
+                "Error de entrada",
+                "Por favor ingresa solo números enteros en los tres campos.")
+            return
+
+        fecha = guardar_registro(
+            red,
+            valores["Agropecuaria"],
+            valores["Agronegocios"],
+            valores["Agroindustrial"],
+        )
+        messagebox.showinfo(
+            "✅ Registro guardado",
+            f"Se guardaron los datos de {red}\nFecha: {fecha}")
+        self._actualizar_tarjetas()
+        self._limpiar()
+
+    # ── Ver gráfica ───────────────────────────────────────────────────────────
+    def _ver_grafica(self):
+        VentanaGrafica(self, self.var_red.get())
+
+    # ── Ver historial ─────────────────────────────────────────────────────────
+    def _ver_historial(self):
+        # Importación tardía para evitar dependencia circular
+        from gestionar import VentanaGestionar
+        VentanaGestionar(self, on_cambio=self._actualizar_tarjetas)
+
+    # ── Limpiar campos ────────────────────────────────────────────────────────
+    def _limpiar(self):
+        for entry in self.entries.values():
+            entry.delete(0, tk.END)
+
+    # ── Generar PDF ───────────────────────────────────────────────────────────
+    def _generar_pdf(self):
+        try:
+            generar_pdf(self.var_red.get())
+            messagebox.showinfo("PDF", "PDF generado correctamente")
+        except Exception as e:
+            messagebox.showerror("Error PDF", str(e))
