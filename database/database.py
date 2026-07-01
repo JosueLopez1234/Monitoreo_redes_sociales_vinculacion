@@ -1,58 +1,92 @@
 """
-database.py - Manejo de la base de datos SQLite
+database.py - Manejo de la base de datos PostgreSQL
+
 """
-import sqlite3
-import sys
-import os
+import psycopg2
+import psycopg2.extras
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+import sys
 
-
-def _carpeta_persistente():
-    """
-    Devuelve la carpeta donde debe vivir datos_uleam.db.
-
-    - Corriendo como script normal (python main.py): la carpeta raíz del
-      proyecto (dos niveles arriba de este archivo).
-    - Corriendo como .exe empaquetado con PyInstaller: PyInstaller extrae
-      el código a una carpeta TEMPORAL distinta cada vez (sys._MEIPASS).
-      Si guardáramos el .db ahí, los datos se "perderían" (en realidad
-      quedarían en una carpeta temporal) cada vez que se cierra la app.
-      Por eso, en modo empaquetado, usamos la carpeta donde está el .exe
-      (sys.executable), que sí es estable entre ejecuciones.
-    """
+# ──────────────────────────────────────────────────────────────────────────
+# CONEXIÓN
+# ──────────────────────────────────────────────────────────────────────────
+def _get_base_path():
+    """Ruta base: junto al .exe si está congelado (PyInstaller),
+    o junto a este .py si corre como script normal."""
     if getattr(sys, "frozen", False):
-        # Empaquetado con PyInstaller: usar la carpeta del .exe
-        return os.path.dirname(os.path.abspath(sys.executable))
-    # Ejecutando como script normal: usar la carpeta raíz del proyecto
-    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+_env_path = os.path.join(_get_base_path(), ".env")
+load_dotenv(override=True)
 
+DB_CONFIG = {
+    "host":     os.environ.get("DB_HOST"),
+    "port":     os.environ.get("DB_PORT"),
+    "dbname":   os.environ.get("DB_NAME"),
+    "user":     os.environ.get("DB_USER"),
+    "password": os.environ.get("DB_PASSWORD"),
+    # keepalives para detectar conexiones muertas rápido en vez de colgarse
+    "keepalives": 1,
+    "keepalives_idle": 30,
+    "keepalives_interval": 10,
+    "keepalives_count": 3,
+}
 
-DB_PATH = os.path.join(_carpeta_persistente(), "datos_uleam.db")
+_conn = None  # conexión persistente, reutilizada en toda la app
 
 
 def get_connection():
-    """Retorna una conexión a la base de datos."""
-    return sqlite3.connect(DB_PATH)
+    """Devuelve la conexión persistente, reconectando si hace falta.
+
+    Ya no abre una conexión nueva en cada llamada: crea UNA la primera
+    vez y la reutiliza. Si detecta que está cerrada o rota, la reabre.
+    """
+    global _conn
+    if _conn is None or _conn.closed:
+        _conn = psycopg2.connect(**DB_CONFIG)
+        return _conn
+    try:
+        with _conn.cursor() as cur:
+            cur.execute("SELECT 1")
+    except psycopg2.OperationalError:
+        _conn = psycopg2.connect(**DB_CONFIG)
+    return _conn
+
+
+def cerrar_conexion():
+    """Cierra la conexión persistente. Llamar al salir de la aplicación."""
+    global _conn
+    if _conn is not None and not _conn.closed:
+        _conn.close()
+    _conn = None
 
 
 def inicializar_db():
-    """Crea las tablas si no existen e inserta datos iniciales."""
+    """Crea las tablas/índices si no existen e inserta datos iniciales."""
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS seguidores (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            fecha       TEXT NOT NULL,
+            id          SERIAL PRIMARY KEY,
+            fecha       TIMESTAMP NOT NULL,
             red_social  TEXT NOT NULL,
             agropecuaria   INTEGER DEFAULT 0,
             agronegocios   INTEGER DEFAULT 0,
             agroindustrial INTEGER DEFAULT 0
         )
     """)
+
+    # Índice para acelerar los filtros/orden por red_social + fecha,
+    # que son el patrón de consulta más usado (obtener_datos, último registro).
+    cursor.execute("""
+        CREATE INDEX IF NOT EXISTS idx_seguidores_red_fecha
+        ON seguidores (red_social, fecha DESC)
+    """)
     conn.commit()
 
-    # Insertar datos iniciales del acta del 8 de mayo de 2026 si la tabla está vacía
     cursor.execute("SELECT COUNT(*) FROM seguidores")
     if cursor.fetchone()[0] == 0:
         datos_iniciales = [
@@ -62,11 +96,11 @@ def inicializar_db():
         ]
         cursor.executemany("""
             INSERT INTO seguidores (fecha, red_social, agropecuaria, agronegocios, agroindustrial)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
         """, datos_iniciales)
         conn.commit()
 
-    conn.close()
+    cursor.close()
 
 
 def guardar_registro(red_social, agropecuaria, agronegocios, agroindustrial):
@@ -76,10 +110,10 @@ def guardar_registro(red_social, agropecuaria, agronegocios, agroindustrial):
     fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
         INSERT INTO seguidores (fecha, red_social, agropecuaria, agronegocios, agroindustrial)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s, %s)
     """, (fecha, red_social, agropecuaria, agronegocios, agroindustrial))
     conn.commit()
-    conn.close()
+    cursor.close()
     return fecha
 
 
@@ -90,14 +124,14 @@ def obtener_datos(red_social="Facebook"):
     cursor.execute("""
         SELECT fecha, agropecuaria, agronegocios, agroindustrial
         FROM seguidores
-        WHERE red_social = ?
+        WHERE red_social = %s
         ORDER BY fecha ASC
     """, (red_social,))
     filas = cursor.fetchall()
-    conn.close()
+    cursor.close()
     return [
         {
-            "fecha": f[0],
+            "fecha": f[0].strftime("%Y-%m-%d %H:%M:%S") if hasattr(f[0], "strftime") else f[0],
             "Agropecuaria": f[1],
             "Agronegocios": f[2],
             "Agroindustrial": f[3],
@@ -113,15 +147,19 @@ def obtener_ultimo_registro(red_social="Facebook"):
     cursor.execute("""
         SELECT fecha, agropecuaria, agronegocios, agroindustrial
         FROM seguidores
-        WHERE red_social = ?
+        WHERE red_social = %s
         ORDER BY fecha DESC
         LIMIT 1
     """, (red_social,))
     fila = cursor.fetchone()
-    conn.close()
+    cursor.close()
     if fila:
-        return {"fecha": fila[0], "Agropecuaria": fila[1],
-                "Agronegocios": fila[2], "Agroindustrial": fila[3]}
+        return {
+            "fecha": fila[0].strftime("%Y-%m-%d %H:%M:%S") if hasattr(fila[0], "strftime") else fila[0],
+            "Agropecuaria": fila[1],
+            "Agronegocios": fila[2],
+            "Agroindustrial": fila[3],
+        }
     return None
 
 
@@ -135,11 +173,11 @@ def obtener_todos_los_registros():
         ORDER BY fecha DESC, red_social ASC
     """)
     filas = cursor.fetchall()
-    conn.close()
+    cursor.close()
     return [
         {
             "id":            f[0],
-            "fecha":         f[1],
+            "fecha":         f[1].strftime("%Y-%m-%d %H:%M:%S") if hasattr(f[1], "strftime") else f[1],
             "red_social":    f[2],
             "Agropecuaria":  f[3],
             "Agronegocios":  f[4],
@@ -155,12 +193,12 @@ def actualizar_registro(id_registro, agropecuaria, agronegocios, agroindustrial)
     cursor = conn.cursor()
     cursor.execute("""
         UPDATE seguidores
-        SET agropecuaria = ?, agronegocios = ?, agroindustrial = ?
-        WHERE id = ?
+        SET agropecuaria = %s, agronegocios = %s, agroindustrial = %s
+        WHERE id = %s
     """, (agropecuaria, agronegocios, agroindustrial, id_registro))
     conn.commit()
     afectadas = cursor.rowcount
-    conn.close()
+    cursor.close()
     return afectadas > 0
 
 
@@ -168,10 +206,10 @@ def eliminar_registro(id_registro):
     """Elimina un registro por su ID."""
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM seguidores WHERE id = ?", (id_registro,))
+    cursor.execute("DELETE FROM seguidores WHERE id = %s", (id_registro,))
     conn.commit()
     afectadas = cursor.rowcount
-    conn.close()
+    cursor.close()
     return afectadas > 0
 
 
@@ -181,6 +219,5 @@ def obtener_redes_disponibles():
     cursor = conn.cursor()
     cursor.execute("SELECT DISTINCT red_social FROM seguidores ORDER BY red_social")
     redes = [r[0] for r in cursor.fetchall()]
-    conn.close()
+    cursor.close()
     return redes or ["Facebook", "TikTok", "Instagram"]
-
