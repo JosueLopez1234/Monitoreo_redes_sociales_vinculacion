@@ -1,27 +1,25 @@
 <aside class="sidebar">
 
-    <div class="logo text-center">
+    <div class="logo">
 
-        <img src="{{ url_for('static', filename='img/logo_uleam.png') }}"
-            class="logo-img mb-3">
+        <img
+            src="{{ url_for('static', filename='img/logo_uleam.png') }}"
+            alt="ULEAM"
+            class="logo-img">
 
-        <h4>
-
+        <h4 class="system-title">
             AgroSocial
-
         </h4>
 
-        <small>
-
+        <span class="system-subtitle">
             Analytics
-
-        </small>
+        </span>
 
     </div>
 
-    <ul class="mt-5">
+    <ul>
 
-        <li>
+        <li class="active">
             <a href="/">
                 <i class="bi bi-speedometer2"></i>
                 Dashboard
