@@ -6,18 +6,26 @@ Dashboard
 
 {% block content %}
 
-<h2 class="mb-4">
+<div class="container-fluid">
 
-    Bienvenido 👋
+    <div class="mb-4">
 
-</h2>
+        <h2>
 
-<p>
+            Bienvenido 👋
 
-    Plataforma de Monitoreo y Análisis de Redes Sociales
+        </h2>
 
-</p>
+        <p class="text-muted">
 
-{% include 'components/cards.html' %}
+            Plataforma de Monitoreo y Análisis de Redes Sociales
+
+        </p>
+
+    </div>
+
+    {% include 'components/cards.html' %}
+
+</div>
 
 {% endblock %}
