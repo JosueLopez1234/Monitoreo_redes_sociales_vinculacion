@@ -1,21 +1,23 @@
 :root {
   --verde: #2e7d32;
-
-  --verde-claro: #4caf50;
-
-  --dorado: #c8a94b;
-
+  --verdeClaro: #4caf50;
   --gris: #f5f7fa;
-
   --texto: #263238;
-
   --blanco: #ffffff;
+  --dorado: #c8a94b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   font-family: "Poppins", sans-serif;
-
   background: var(--gris);
+}
 
-  color: var(--texto);
+.wrapper {
+  display: flex;
 }
