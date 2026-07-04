@@ -13,13 +13,33 @@ import sys
 # CONEXIÓN
 # ──────────────────────────────────────────────────────────────────────────
 def _get_base_path():
-    """Ruta base: junto al .exe si está congelado (PyInstaller),
-    o junto a este .py si corre como script normal."""
     if getattr(sys, "frozen", False):
         return os.path.dirname(sys.executable)
     return os.path.dirname(os.path.abspath(__file__))
-_env_path = os.path.join(_get_base_path(), ".env")
-load_dotenv(override=True)
+
+
+def _encontrar_env():
+    candidatos = [
+        os.path.join(_get_base_path(), ".env"),
+        os.path.join(os.path.expanduser("~"), "MonitorRedesAGRO", ".env"),
+    ]
+    for ruta in candidatos:
+        if os.path.exists(ruta):
+            return ruta
+    return None  # <-- antes devolvía candidatos[0] como fallback "fantasma"
+
+
+ruta_env = _encontrar_env()
+if ruta_env:
+    load_dotenv(dotenv_path=ruta_env, override=True)
+else:
+    raise FileNotFoundError(
+        "No se encontró el archivo .env. Debe estar junto al .exe "
+        "o en la carpeta %USERPROFILE%\\MonitorRedesAGRO\\.env"
+    )
+
+
+load_dotenv(dotenv_path=_encontrar_env(), override=True)
 
 DB_CONFIG = {
     "host":     os.environ.get("DB_HOST"),
