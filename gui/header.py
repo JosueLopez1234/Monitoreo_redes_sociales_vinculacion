@@ -29,7 +29,29 @@ class HeaderMixin:
             text="🌿  MONITOR DE REDES SOCIALES  •  ULEAM – FCVT",
             bg=ACCENT, fg="white",
             font=FONT_TITLE,
-        ).pack(expand=True)
+        ).pack(side="left", expand=True)
+
+        # Indicador de conexión: se actualiza desde HiloSincronizacion
+        # (ver gui/app.py). Empieza en gris mientras se hace la primera prueba.
+        self.lbl_estado_conexion = tk.Label(
+            frame,
+            text="⏳ Verificando conexión…",
+            bg=ACCENT, fg="#dddddd",
+            font=FONT_TINY,
+        )
+        self.lbl_estado_conexion.pack(side="right", padx=16)
+
+    def actualizar_estado_conexion(self, online, pendientes, mensaje=""):
+        """Llamado desde el hilo de sincronización (siempre vía `after`,
+        nunca directo, porque Tkinter no es thread-safe)."""
+        if online and pendientes == 0:
+            texto, color = "🟢 En línea", "#a6e3a1"
+        elif online and pendientes > 0:
+            texto, color = f"🟡 En línea — sincronizando {pendientes} pendiente(s)", "#f9e2af"
+        else:
+            texto = f"🔴 Sin conexión" + (f" — {pendientes} pendiente(s) por subir" if pendientes else "")
+            color = "#f38ba8"
+        self.lbl_estado_conexion.config(text=texto, fg=color)
 
     # ── Selector de red social ────────────────────────────────────────────────
     def _construir_selector_red(self):

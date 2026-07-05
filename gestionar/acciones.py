@@ -8,6 +8,7 @@ Mixin con las acciones sobre registros:
 from tkinter import messagebox
 
 from database.database import actualizar_registro, eliminar_registro
+from validaciones import validar_valores_seguidores
 from theme import GRAY
 
 
@@ -26,7 +27,22 @@ class AccionesMixin:
             messagebox.showerror("Error", "Los valores deben ser números enteros.")
             return
 
-        if actualizar_registro(self._id_seleccionado, agro, agron, agroi):
+        ok, mensaje_error = validar_valores_seguidores({
+            "Agropecuaria": agro, "Agronegocios": agron, "Agroindustrial": agroi,
+        })
+        if not ok:
+            messagebox.showerror("Dato fuera de rango", mensaje_error)
+            return
+
+        try:
+            actualizado = actualizar_registro(self._id_seleccionado, agro, agron, agroi)
+        except Exception as e:
+            messagebox.showerror(
+                "No se pudo actualizar",
+                f"Ocurrió un problema inesperado al actualizar.\n\nDetalle técnico: {e}")
+            return
+
+        if actualizado:
             messagebox.showinfo(
                 "✅ Actualizado",
                 f"Registro #{self._id_seleccionado} actualizado correctamente.")
@@ -51,7 +67,15 @@ class AccionesMixin:
         ):
             return
 
-        if eliminar_registro(self._id_seleccionado):
+        try:
+            eliminado = eliminar_registro(self._id_seleccionado)
+        except Exception as e:
+            messagebox.showerror(
+                "No se pudo eliminar",
+                f"Ocurrió un problema inesperado al eliminar.\n\nDetalle técnico: {e}")
+            return
+
+        if eliminado:
             messagebox.showinfo("🗑️ Eliminado",
                                 f"Registro #{self._id_seleccionado} eliminado.")
             self._cargar_tabla()

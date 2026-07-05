@@ -17,6 +17,7 @@ from .cards   import CardsMixin
 from .form    import FormMixin
 from .actions import ActionsMixin
 from theme import BG_DARK
+from services.sync_thread import HiloSincronizacion
 
 
 class App(tk.Tk, HeaderMixin, CardsMixin, FormMixin, ActionsMixin):
@@ -44,3 +45,19 @@ class App(tk.Tk, HeaderMixin, CardsMixin, FormMixin, ActionsMixin):
         self._construir_pie()               # HeaderMixin
 
         self._actualizar_tarjetas()         # CardsMixin
+
+        # Hilo en segundo plano: revisa conexión y sube pendientes solo.
+        self.hilo_sync = HiloSincronizacion(callback_estado=self._on_estado_sync)
+        self.hilo_sync.start()
+
+    def _on_estado_sync(self, online, pendientes, mensaje):
+        """Se llama desde el hilo de fondo; Tkinter exige pasar por
+        `after` para tocar la interfaz desde otro hilo."""
+        def actualizar():
+            self.actualizar_estado_conexion(online, pendientes, mensaje)
+            if pendientes == 0 and hasattr(self, "_actualizar_tarjetas"):
+                self._actualizar_tarjetas()
+        try:
+            self.after(0, actualizar)
+        except tk.TclError:
+            pass  # la ventana ya se cerró
