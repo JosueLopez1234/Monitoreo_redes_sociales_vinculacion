@@ -1,0 +1,77 @@
+.form-control {
+  border-radius: 12px;
+
+  padding: 12px;
+}
+
+.form-select {
+  border-radius: 12px;
+
+  padding: 12px;
+}
+
+.form-label {
+  font-weight: 600;
+
+  margin-bottom: 8px;
+}
+
+.btn {
+  border-radius: 12px;
+
+  padding: 10px 22px;
+}
+
+.btn-success {
+  background: #1e5631;
+
+  border: none;
+}
+
+.btn-success:hover {
+  background: #2e7d32;
+}
+.alert {
+  border-radius: 15px;
+}
+
+.card ul {
+  padding-left: 20px;
+}
+
+.card ul li {
+  margin-bottom: 10px;
+}
+
+input:focus,
+select:focus {
+  border-color: #1e5631 !important;
+
+  box-shadow: 0 0 0 0.2rem rgba(30, 86, 49, 0.2);
+}
+.table {
+  background: white;
+
+  border-radius: 15px;
+}
+
+.table thead {
+  vertical-align: middle;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.btn-sm {
+  margin-right: 5px;
+}
+.table-bordered {
+  background: white;
+}
+
+.alert-light {
+  border-radius: 15px;
+
+  border: 1px solid #ddd;
+}

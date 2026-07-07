@@ -122,3 +122,42 @@
 
   font-weight: 700;
 }
+.progress {
+  height: 28px;
+
+  border-radius: 20px;
+
+  background: #e9ecef;
+}
+
+.progress-bar {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+canvas {
+  max-width: 100%;
+}
+.export-card {
+  transition: 0.3s;
+}
+
+.export-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.export-card i {
+  transition: 0.3s;
+}
+
+.export-card:hover i {
+  transform: scale(1.15);
+}
