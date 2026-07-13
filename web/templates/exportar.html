@@ -1,24 +1,234 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Exportar
+Exportar Información
 {% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
 
-    <h2>
+    <div class="mb-4">
 
-        Exportar Datos
+        <h2>
 
-    </h2>
+            Exportar Información
 
-    <p class="text-muted">
+        </h2>
 
-        Exportación de información a PDF y Excel.
+        <p class="text-muted">
 
-    </p>
+            Descargue los registros del sistema en diferentes formatos.
+
+        </p>
+
+    </div>
+
+    <div class="row g-4">
+
+        <!-- PDF -->
+
+        <div class="col-lg-4">
+
+            <div class="card dashboard-card export-card">
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-file-earmark-pdf-fill text-danger display-3"></i>
+
+                    <h4 class="mt-4">
+
+                        PDF
+
+                    </h4>
+
+                    <p>
+
+                        Generar reporte institucional en formato PDF.
+
+                    </p>
+
+                    <button class="btn btn-danger">
+
+                        Exportar PDF
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Excel -->
+
+        <div class="col-lg-4">
+
+            <div class="card dashboard-card export-card">
+
+                <div class="card-body text-center">
+
+                    <i
+                        class="bi bi-file-earmark-excel-fill text-success display-3"></i>
+
+                    <h4 class="mt-4">
+
+                        Excel
+
+                    </h4>
+
+                    <p>
+
+                        Exportar los registros para análisis.
+
+                    </p>
+
+                    <button class="btn btn-success">
+
+                        Exportar Excel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CSV -->
+
+        <div class="col-lg-4">
+
+            <div class="card dashboard-card export-card">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-filetype-csv text-primary display-3"></i>
+
+                    <h4 class="mt-4">
+
+                        CSV
+
+                    </h4>
+
+                    <p>
+
+                        Descargar información en formato CSV.
+
+                    </p>
+
+                    <button class="btn btn-primary">
+
+                        Exportar CSV
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card dashboard-card mt-5">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+
+                Historial de Exportaciones
+
+            </h4>
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-success">
+
+                    <tr>
+
+                        <th>Fecha</th>
+
+                        <th>Archivo</th>
+
+                        <th>Formato</th>
+
+                        <th>Estado</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>02/07/2026</td>
+
+                        <td>Reporte_Julio.pdf</td>
+
+                        <td>PDF</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+
+                                Completado
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>01/07/2026</td>
+
+                        <td>Seguidores.xlsx</td>
+
+                        <td>Excel</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+
+                                Completado
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>30/06/2026</td>
+
+                        <td>Datos.csv</td>
+
+                        <td>CSV</td>
+
+                        <td>
+
+                            <span class="badge bg-warning text-dark">
+
+                                Pendiente
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

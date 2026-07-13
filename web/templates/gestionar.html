@@ -1,24 +1,156 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Gestión
+Gestión de Registros
 {% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
 
-    <h2>
+    <div class="card dashboard-card">
 
-        Gestión de Registros
+        <div class="card-body">
 
-    </h2>
+            <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <p class="text-muted">
+                <div>
 
-        Administra los registros almacenados.
+                    <h2>Gestión de Registros</h2>
 
-    </p>
+                    <p class="text-muted">
+
+                        Consulta, edita y elimina registros almacenados.
+
+                    </p>
+
+                </div>
+
+                <a href="{{ url_for('registrar') }}" class="btn btn-success">
+
+                    <i class="bi bi-plus-circle"></i>
+
+                    Nuevo Registro
+
+                </a>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-success">
+
+                        <tr>
+
+                            <th>Fecha</th>
+
+                            <th>Red Social</th>
+
+                            <th>Agropecuaria</th>
+
+                            <th>Agronegocios</th>
+
+                            <th>Agroindustrial</th>
+
+                            <th>Total</th>
+
+                            <th>Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% if registros %}
+
+                        {% for registro in registros %}
+
+                        <tr>
+
+                            <td>{{ registro.fecha }}</td>
+
+                            <td>{{ registro.red_social }}</td>
+
+                            <td>{{ registro.Agropecuaria }}</td>
+
+                            <td>{{ registro.Agronegocios }}</td>
+
+                            <td>{{ registro.Agroindustrial }}</td>
+
+                            <td>
+
+                                <strong>
+
+                                    {{ registro.Agropecuaria +
+                                    registro.Agronegocios +
+                                    registro.Agroindustrial }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <!-- EDITAR -->
+
+                                <button
+                                    class="btn btn-warning btn-sm"
+                                    disabled>
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                </button>
+
+                                <!-- ELIMINAR -->
+
+                                <form
+                                    action="{{ url_for('eliminar', id_registro=registro.id) }}"
+                                    method="POST"
+                                    style="display:inline;">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Desea eliminar este registro?');">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                        {% else %}
+
+                        <tr>
+
+                            <td colspan="7" class="text-center">
+
+                                No existen registros.
+
+                            </td>
+
+                        </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
