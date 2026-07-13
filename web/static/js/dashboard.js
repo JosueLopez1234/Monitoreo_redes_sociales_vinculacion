@@ -1,24 +1,27 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const ctx = document.getElementById("graficaSeguidores");
+    const canvas = document.getElementById("graficaSeguidores");
 
-    if (!ctx) return;
+    if (!canvas) return;
 
-    new Chart(ctx, {
+    // Los datos son enviados desde Flask mediante data-* en el canvas.
+    const agropecuaria = parseInt(canvas.dataset.agropecuaria || 0);
+    const agronegocios = parseInt(canvas.dataset.agronegocios || 0);
+    const agroindustrial = parseInt(canvas.dataset.agroindustrial || 0);
 
-        type: "line",
+    new Chart(canvas, {
+
+        type: "bar",
 
         data: {
 
             labels: [
 
-                "Lunes",
-                "Martes",
-                "Miércoles",
-                "Jueves",
-                "Viernes",
-                "Sábado",
-                "Domingo"
+                "Agropecuaria",
+
+                "Agronegocios",
+
+                "Agroindustrial"
 
             ],
 
@@ -26,49 +29,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 {
 
-                    label: "Agropecuaria",
+                    label: "Seguidores",
 
-                    data: [3100, 3130, 3150, 3180, 3200, 3230, 3250],
+                    data: [
 
-                    borderColor: "#198754",
+                        agropecuaria,
 
-                    backgroundColor: "rgba(25,135,84,.15)",
+                        agronegocios,
 
-                    tension: .4,
+                        agroindustrial
 
-                    fill: true
+                    ],
 
-                },
+                    backgroundColor: [
 
-                {
+                        "#198754",
 
-                    label: "Agronegocios",
+                        "#0d6efd",
 
-                    data: [1760, 1775, 1780, 1790, 1800, 1810, 1820],
+                        "#ffc107"
 
-                    borderColor: "#0d6efd",
+                    ],
 
-                    backgroundColor: "rgba(13,110,253,.12)",
+                    borderRadius: 8,
 
-                    tension: .4,
-
-                    fill: true
-
-                },
-
-                {
-
-                    label: "Agroindustrial",
-
-                    data: [700,705,708,710,715,718,720],
-
-                    borderColor:"#ffc107",
-
-                    backgroundColor:"rgba(255,193,7,.18)",
-
-                    tension:.4,
-
-                    fill:true
+                    borderWidth: 1
 
                 }
 
@@ -76,17 +61,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
         },
 
-        options:{
+        options: {
 
-            responsive:true,
+            responsive: true,
 
-            maintainAspectRatio:false,
+            maintainAspectRatio: false,
 
-            plugins:{
+            plugins: {
 
-                legend:{
+                legend: {
 
-                    position:"top"
+                    display: false
+
+                },
+
+                title: {
+
+                    display: true,
+
+                    text: "Seguidores por Carrera"
+
+                }
+
+            },
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true
 
                 }
 
