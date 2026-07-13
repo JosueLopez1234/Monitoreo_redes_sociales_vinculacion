@@ -1,8 +1,8 @@
-*.db
-automatizacion.log
+@"
+.env
 __pycache__/
 *.pyc
-.env
-build/
 dist/
-*.spec
+build/
+*.db
+"@ | Out-File -Encoding utf8 .gitignore

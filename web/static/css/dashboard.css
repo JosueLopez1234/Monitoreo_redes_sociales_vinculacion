@@ -1,0 +1,163 @@
+.content {
+  flex: 1;
+  padding: 30px;
+
+  background: #f5f7fa;
+}
+
+.navbar-custom {
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 20px 30px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  margin-bottom: 35px;
+}
+
+.dashboard-card {
+  border: none;
+
+  border-radius: 20px;
+
+  transition: 0.3s;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
+
+.dashboard-card .card-body {
+  padding: 28px;
+}
+
+.dashboard-card h1 {
+  font-size: 42px;
+
+  font-weight: 700;
+
+  color: #1e5631;
+}
+
+.card-icon {
+  width: 65px;
+
+  height: 65px;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.card-icon i {
+  font-size: 30px;
+}
+.chart-placeholder {
+  height: 330px;
+
+  border: 3px dashed #d5dde5;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: white;
+}
+
+.chart-placeholder i {
+  font-size: 70px;
+
+  color: #2e7d32;
+
+  margin-bottom: 20px;
+}
+
+.chart-placeholder p {
+  color: #7a7a7a;
+
+  font-size: 18px;
+}
+.kpi-card {
+  border: none;
+
+  border-radius: 18px;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.kpi-card:hover {
+  transform: translateY(-5px);
+}
+
+.kpi-card h2 {
+  color: #1e5631;
+
+  margin: 10px 0;
+
+  font-weight: 700;
+}
+.progress {
+  height: 28px;
+
+  border-radius: 20px;
+
+  background: #e9ecef;
+}
+
+.progress-bar {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+canvas {
+  max-width: 100%;
+}
+.export-card {
+  transition: 0.3s;
+}
+
+.export-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.export-card i {
+  transition: 0.3s;
+}
+
+.export-card:hover i {
+  transform: scale(1.15);
+}
