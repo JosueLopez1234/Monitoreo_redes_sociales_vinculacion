@@ -8,7 +8,7 @@ sys.path.append(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 
-import database 
+import database
 
 app = Flask(__name__)
 
@@ -26,6 +26,7 @@ def dashboard():
 # ==========================
 # Registrar
 # ==========================
+
 @app.route("/registrar", methods=["GET", "POST"])
 def registrar():
 
@@ -55,6 +56,33 @@ def registrar():
 
 
 # ==========================
+# Gestión
+# ==========================
+
+@app.route("/gestion")
+def gestion():
+
+    registros = database.obtener_todos_los_registros()
+
+    return render_template(
+        "gestionar.html",
+        registros=registros,
+    )
+
+
+# ==========================
+# Eliminar Registro
+# ==========================
+
+@app.route("/eliminar/<int:id_registro>", methods=["POST"])
+def eliminar(id_registro):
+
+    database.eliminar_registro(id_registro)
+
+    return redirect(url_for("gestion"))
+
+
+# ==========================
 # Estadísticas
 # ==========================
 
@@ -70,21 +98,6 @@ def estadisticas():
 @app.route("/graficas")
 def graficas():
     return render_template("graficas.html")
-
-
-# ==========================
-# Gestión
-# ==========================
-
-@app.route("/gestion")
-def gestion():
-
-    registros = database.obtener_todos_los_registros()
-
-    return render_template(
-        "gestionar.html",
-        registros=registros
-    )
 
 
 # ==========================
@@ -104,6 +117,10 @@ def reportes():
 def exportar():
     return render_template("exportar.html")
 
+
+# ==========================
+# Ejecutar aplicación
+# ==========================
 
 if __name__ == "__main__":
     app.run(debug=True)

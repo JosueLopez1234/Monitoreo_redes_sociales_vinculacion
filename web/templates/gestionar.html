@@ -16,12 +16,12 @@ Gestión de Registros
 
                 <div>
 
-                    <h2>
-                        Gestión de Registros
-                    </h2>
+                    <h2>Gestión de Registros</h2>
 
                     <p class="text-muted">
+
                         Consulta, edita y elimina registros almacenados.
+
                     </p>
 
                 </div>
@@ -33,31 +33,6 @@ Gestión de Registros
                     Nuevo Registro
 
                 </a>
-
-            </div>
-
-            <div class="row mb-4">
-
-                <div class="col-md-8">
-
-                    <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Buscar por fecha o red social">
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <button class="btn btn-success w-100">
-
-                        <i class="bi bi-search"></i>
-
-                        Buscar
-
-                    </button>
-
-                </div>
 
             </div>
 
@@ -78,6 +53,8 @@ Gestión de Registros
                             <th>Agronegocios</th>
 
                             <th>Agroindustrial</th>
+
+                            <th>Total</th>
 
                             <th>Acciones</th>
 
@@ -105,17 +82,45 @@ Gestión de Registros
 
                             <td>
 
-                                <button class="btn btn-warning btn-sm">
+                                <strong>
+
+                                    {{ registro.Agropecuaria +
+                                    registro.Agronegocios +
+                                    registro.Agroindustrial }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <!-- EDITAR -->
+
+                                <button
+                                    class="btn btn-warning btn-sm"
+                                    disabled>
 
                                     <i class="bi bi-pencil-square"></i>
 
                                 </button>
 
-                                <button class="btn btn-danger btn-sm">
+                                <!-- ELIMINAR -->
 
-                                    <i class="bi bi-trash"></i>
+                                <form
+                                    action="{{ url_for('eliminar', id_registro=registro.id) }}"
+                                    method="POST"
+                                    style="display:inline;">
 
-                                </button>
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('¿Desea eliminar este registro?');">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </button>
+
+                                </form>
 
                             </td>
 
@@ -127,9 +132,9 @@ Gestión de Registros
 
                         <tr>
 
-                            <td colspan="6" class="text-center text-muted">
+                            <td colspan="7" class="text-center">
 
-                                No existen registros en la base de datos.
+                                No existen registros.
 
                             </td>
 
