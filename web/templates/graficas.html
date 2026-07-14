@@ -18,7 +18,8 @@ Gráficas
 
         <p class="text-muted">
 
-            Visualización del crecimiento de seguidores por carrera.
+            Análisis del comportamiento de seguidores registrados en cada red
+            social.
 
         </p>
 
@@ -28,21 +29,130 @@ Gráficas
 
         <div class="col-lg-12">
 
-            <div class="card dashboard-card">
+            <div class="card dashboard-card shadow">
+
+                <div class="card-header bg-success text-white">
+
+                    <i class="bi bi-bar-chart-line-fill"></i>
+
+                    Seguidores por Carrera
+
+                </div>
 
                 <div class="card-body">
 
-                    <h4 class="mb-4">
+                    <div style="height:450px;">
 
-                        Crecimiento Semanal
+                        <canvas
+                            id="graficaSeguidores"
+                            data-agropecuaria="{{ total_agropecuaria }}"
+                            data-agronegocios="{{ total_agronegocios }}"
+                            data-agroindustrial="{{ total_agroindustrial }}">
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-facebook fs-1 text-primary"></i>
+
+                    <h4 class="mt-3">
+
+                        Facebook
 
                     </h4>
 
-                    <div style="height:500px;">
+                    <h2>
 
-                        <canvas id="graficaSeguidores"></canvas>
+                        {{ facebook|length }}
 
-                    </div>
+                    </h2>
+
+                    <small class="text-muted">
+
+                        Registros almacenados
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-instagram fs-1 text-danger"></i>
+
+                    <h4 class="mt-3">
+
+                        Instagram
+
+                    </h4>
+
+                    <h2>
+
+                        {{ instagram|length }}
+
+                    </h2>
+
+                    <small class="text-muted">
+
+                        Registros almacenados
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-tiktok fs-1"></i>
+
+                    <h4 class="mt-3">
+
+                        TikTok
+
+                    </h4>
+
+                    <h2>
+
+                        {{ tiktok|length }}
+
+                    </h2>
+
+                    <small class="text-muted">
+
+                        Registros almacenados
+
+                    </small>
 
                 </div>
 
