@@ -88,7 +88,7 @@ exe = EXE(
 
     upx=True,
 
-    console=True,
+    console=False,
 
     disable_windowed_traceback=False,
 
