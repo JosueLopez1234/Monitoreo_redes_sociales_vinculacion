@@ -8,7 +8,26 @@ Gestión de Registros
 
 <div class="container-fluid">
 
-    <div class="card dashboard-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+
+    <div class="alert alert-{{ category }} alert-dismissible fade show">
+
+        {{ message }}
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"></button>
+
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="card shadow">
 
         <div class="card-body">
 
@@ -16,17 +35,23 @@ Gestión de Registros
 
                 <div>
 
-                    <h2>Gestión de Registros</h2>
+                    <h2>
+
+                        Gestión de Registros
+
+                    </h2>
 
                     <p class="text-muted">
 
-                        Consulta, edita y elimina registros almacenados.
+                        Administración completa de registros.
 
                     </p>
 
                 </div>
 
-                <a href="{{ url_for('registrar') }}" class="btn btn-success">
+                <a
+                    href="{{ url_for('registrar') }}"
+                    class="btn btn-success">
 
                     <i class="bi bi-plus-circle"></i>
 
@@ -36,9 +61,25 @@ Gestión de Registros
 
             </div>
 
+            <div class="row mb-3">
+
+                <div class="col-md-6">
+
+                    <input
+                        type="text"
+                        id="buscar"
+                        class="form-control"
+                        placeholder="Buscar por fecha o red social...">
+
+                </div>
+
+            </div>
+
             <div class="table-responsive">
 
-                <table class="table table-hover align-middle">
+                <table
+                    class="table table-striped table-hover align-middle"
+                    id="tablaRegistros">
 
                     <thead class="table-success">
 
@@ -56,7 +97,11 @@ Gestión de Registros
 
                             <th>Total</th>
 
-                            <th>Acciones</th>
+                            <th width="180">
+
+                                Acciones
+
+                            </th>
 
                         </tr>
 
@@ -64,21 +109,39 @@ Gestión de Registros
 
                     <tbody>
 
-                        {% if registros %}
-
                         {% for registro in registros %}
 
                         <tr>
 
-                            <td>{{ registro.fecha }}</td>
+                            <td>
 
-                            <td>{{ registro.red_social }}</td>
+                                {{ registro.fecha }}
 
-                            <td>{{ registro.Agropecuaria }}</td>
+                            </td>
 
-                            <td>{{ registro.Agronegocios }}</td>
+                            <td>
 
-                            <td>{{ registro.Agroindustrial }}</td>
+                                {{ registro.red_social }}
+
+                            </td>
+
+                            <td>
+
+                                {{ registro.Agropecuaria }}
+
+                            </td>
+
+                            <td>
+
+                                {{ registro.Agronegocios }}
+
+                            </td>
+
+                            <td>
+
+                                {{ registro.Agroindustrial }}
+
+                            </td>
 
                             <td>
 
@@ -94,17 +157,18 @@ Gestión de Registros
 
                             <td>
 
-                                <!-- EDITAR -->
-
                                 <button
-                                    class="btn btn-warning btn-sm"
-                                    disabled>
+                                    class="btn btn-warning btn-sm editar"
+                                    data-id="{{ registro.id }}"
+                                    data-agropecuaria="{{ registro.Agropecuaria }}"
+                                    data-agronegocios="{{ registro.Agronegocios }}"
+                                    data-agroindustrial="{{ registro.Agroindustrial }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEditar">
 
                                     <i class="bi bi-pencil-square"></i>
 
                                 </button>
-
-                                <!-- ELIMINAR -->
 
                                 <form
                                     action="{{ url_for('eliminar', id_registro=registro.id) }}"
@@ -112,9 +176,8 @@ Gestión de Registros
                                     style="display:inline;">
 
                                     <button
-                                        type="submit"
                                         class="btn btn-danger btn-sm"
-                                        onclick="return confirm('¿Desea eliminar este registro?');">
+                                        onclick="return confirm('¿Eliminar registro?')">
 
                                         <i class="bi bi-trash"></i>
 
@@ -128,20 +191,6 @@ Gestión de Registros
 
                         {% endfor %}
 
-                        {% else %}
-
-                        <tr>
-
-                            <td colspan="7" class="text-center">
-
-                                No existen registros.
-
-                            </td>
-
-                        </tr>
-
-                        {% endif %}
-
                     </tbody>
 
                 </table>
@@ -153,5 +202,154 @@ Gestión de Registros
     </div>
 
 </div>
+
+<!-- MODAL -->
+
+<div
+    class="modal fade"
+    id="modalEditar"
+    tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form
+                method="POST"
+                id="formEditar">
+
+                <div class="modal-header">
+
+                    <h5>
+
+                        Editar Registro
+
+                    </h5>
+
+                    <button
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <label>
+
+                        Agropecuaria
+
+                    </label>
+
+                    <input
+                        class="form-control mb-3"
+                        type="number"
+                        id="editarAgropecuaria"
+                        name="agropecuaria"
+                        required>
+
+                    <label>
+
+                        Agronegocios
+
+                    </label>
+
+                    <input
+                        class="form-control mb-3"
+                        type="number"
+                        id="editarAgronegocios"
+                        name="agronegocios"
+                        required>
+
+                    <label>
+
+                        Agroindustrial
+
+                    </label>
+
+                    <input
+                        class="form-control"
+                        type="number"
+                        id="editarAgroindustrial"
+                        name="agroindustrial"
+                        required>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                        type="button">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        class="btn btn-success"
+                        type="submit">
+
+                        Guardar Cambios
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+const botones=document.querySelectorAll(".editar");
+
+const formulario=document.getElementById("formEditar");
+
+botones.forEach(boton=>{
+
+boton.addEventListener("click",()=>{
+
+formulario.action="/editar/"+boton.dataset.id;
+
+document.getElementById("editarAgropecuaria").value=boton.dataset.agropecuaria;
+
+document.getElementById("editarAgronegocios").value=boton.dataset.agronegocios;
+
+document.getElementById("editarAgroindustrial").value=boton.dataset.agroindustrial;
+
+});
+
+});
+
+document.getElementById("buscar").addEventListener("keyup",function(){
+
+let valor=this.value.toLowerCase();
+
+let filas=document.querySelectorAll("#tablaRegistros tbody tr");
+
+filas.forEach(fila=>{
+
+fila.style.display=fila.innerText.toLowerCase().includes(valor)
+
+? ""
+
+: "none";
+
+});
+
+});
+
+</script>
 
 {% endblock %}

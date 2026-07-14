@@ -18,7 +18,8 @@ Exportar Información
 
         <p class="text-muted">
 
-            Descargue los registros del sistema en diferentes formatos.
+            Descargue la información registrada en AgroSocial Analytics
+            en diferentes formatos.
 
         </p>
 
@@ -30,7 +31,7 @@ Exportar Información
 
         <div class="col-lg-4">
 
-            <div class="card dashboard-card export-card">
+            <div class="card dashboard-card export-card shadow">
 
                 <div class="card-body text-center">
 
@@ -45,15 +46,19 @@ Exportar Información
 
                     <p>
 
-                        Generar reporte institucional en formato PDF.
+                        Generar un reporte institucional en formato PDF.
 
                     </p>
 
-                    <button class="btn btn-danger">
+                    <a
+                        href="{{ url_for('generar_pdf') }}"
+                        class="btn btn-danger">
+
+                        <i class="bi bi-download"></i>
 
                         Exportar PDF
 
-                    </button>
+                    </a>
 
                 </div>
 
@@ -61,11 +66,11 @@ Exportar Información
 
         </div>
 
-        <!-- Excel -->
+        <!-- EXCEL -->
 
         <div class="col-lg-4">
 
-            <div class="card dashboard-card export-card">
+            <div class="card dashboard-card export-card shadow">
 
                 <div class="card-body text-center">
 
@@ -80,15 +85,19 @@ Exportar Información
 
                     <p>
 
-                        Exportar los registros para análisis.
+                        Descargar todos los registros en formato Excel.
 
                     </p>
 
-                    <button class="btn btn-success">
+                    <a
+                        href="{{ url_for('generar_excel') }}"
+                        class="btn btn-success">
+
+                        <i class="bi bi-download"></i>
 
                         Exportar Excel
 
-                    </button>
+                    </a>
 
                 </div>
 
@@ -100,11 +109,12 @@ Exportar Información
 
         <div class="col-lg-4">
 
-            <div class="card dashboard-card export-card">
+            <div class="card dashboard-card export-card shadow">
 
                 <div class="card-body text-center">
 
-                    <i class="bi bi-filetype-csv text-primary display-3"></i>
+                    <i
+                        class="bi bi-filetype-csv text-primary display-3"></i>
 
                     <h4 class="mt-4">
 
@@ -114,15 +124,19 @@ Exportar Información
 
                     <p>
 
-                        Descargar información en formato CSV.
+                        Descargar todos los registros en formato CSV.
 
                     </p>
 
-                    <button class="btn btn-primary">
+                    <a
+                        href="{{ url_for('generar_csv') }}"
+                        class="btn btn-primary">
+
+                        <i class="bi bi-download"></i>
 
                         Exportar CSV
 
-                    </button>
+                    </a>
 
                 </div>
 
@@ -132,99 +146,163 @@ Exportar Información
 
     </div>
 
-    <div class="card dashboard-card mt-5">
+    <div class="card dashboard-card shadow mt-5">
+
+        <div class="card-header bg-success text-white">
+
+            Vista previa de la información que será exportada
+
+        </div>
 
         <div class="card-body">
 
-            <h4 class="mb-4">
+            <div class="table-responsive">
 
-                Historial de Exportaciones
+                <table class="table table-hover table-bordered">
 
-            </h4>
+                    <thead class="table-success">
 
-            <table class="table table-hover align-middle">
+                        <tr>
 
-                <thead class="table-success">
+                            <th>Fecha</th>
 
-                    <tr>
+                            <th>Red Social</th>
 
-                        <th>Fecha</th>
+                            <th>Agropecuaria</th>
 
-                        <th>Archivo</th>
+                            <th>Agronegocios</th>
 
-                        <th>Formato</th>
+                            <th>Agroindustrial</th>
 
-                        <th>Estado</th>
+                            <th>Total</th>
 
-                    </tr>
+                        </tr>
 
-                </thead>
+                    </thead>
 
-                <tbody>
+                    <tbody>
 
-                    <tr>
+                        {% if registros %}
 
-                        <td>02/07/2026</td>
+                        {% for registro in registros %}
 
-                        <td>Reporte_Julio.pdf</td>
+                        <tr>
 
-                        <td>PDF</td>
+                            <td>{{ registro.fecha }}</td>
 
-                        <td>
+                            <td>{{ registro.red_social }}</td>
 
-                            <span class="badge bg-success">
+                            <td>{{ registro.Agropecuaria }}</td>
 
-                                Completado
+                            <td>{{ registro.Agronegocios }}</td>
 
-                            </span>
+                            <td>{{ registro.Agroindustrial }}</td>
 
-                        </td>
+                            <td>
 
-                    </tr>
+                                <strong>
 
-                    <tr>
+                                    {{ registro.Agropecuaria +
+                                    registro.Agronegocios +
+                                    registro.Agroindustrial }}
 
-                        <td>01/07/2026</td>
+                                </strong>
 
-                        <td>Seguidores.xlsx</td>
+                            </td>
 
-                        <td>Excel</td>
+                        </tr>
 
-                        <td>
+                        {% endfor %}
 
-                            <span class="badge bg-success">
+                        {% else %}
 
-                                Completado
+                        <tr>
 
-                            </span>
+                            <td colspan="6" class="text-center">
 
-                        </td>
+                                No existen registros para exportar.
 
-                    </tr>
+                            </td>
 
-                    <tr>
+                        </tr>
 
-                        <td>30/06/2026</td>
+                        {% endif %}
 
-                        <td>Datos.csv</td>
+                    </tbody>
 
-                        <td>CSV</td>
+                </table>
 
-                        <td>
+            </div>
 
-                            <span class="badge bg-warning text-dark">
+            <hr>
 
-                                Pendiente
+            <div class="row text-center">
 
-                            </span>
+                <div class="col-md-3">
 
-                        </td>
+                    <h4>
 
-                    </tr>
+                        {{ total_registros }}
 
-                </tbody>
+                    </h4>
 
-            </table>
+                    <small>
+
+                        Registros
+
+                    </small>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <h4>
+
+                        {{ total_agropecuaria }}
+
+                    </h4>
+
+                    <small>
+
+                        Agropecuaria
+
+                    </small>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <h4>
+
+                        {{ total_agronegocios }}
+
+                    </h4>
+
+                    <small>
+
+                        Agronegocios
+
+                    </small>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <h4>
+
+                        {{ total_agroindustrial }}
+
+                    </h4>
+
+                    <small>
+
+                        Agroindustrial
+
+                    </small>
+
+                </div>
+
+            </div>
 
         </div>
 
