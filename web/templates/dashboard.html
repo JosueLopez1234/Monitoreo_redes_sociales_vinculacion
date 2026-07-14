@@ -9,203 +9,140 @@ Dashboard
 <div class="container-fluid">
 
     <div class="mb-4">
-
-        <h2>
-
-            Bienvenido 👋
-
-        </h2>
-
+        <h2>Bienvenido 👋</h2>
         <p class="text-muted">
-
-            Plataforma de Monitoreo y Análisis de Redes Sociales
-
+            Plataforma de Monitoreo y Análisis de Redes Sociales<br>
+            Facultad de Ciencias Agropecuarias - ULEAM
         </p>
-
     </div>
-
-    <!-- KPIs -->
 
     <div class="row g-4 mb-4">
 
         <div class="col-lg-3">
-
-            <div class="card kpi-card">
-
-                <div class="card-body">
-
-                    <small>Total seguidores</small>
-
-                    <h2>5,790</h2>
-
-                    <span class="text-success">
-
-                        ▲ +32 Hoy
-
-                    </span>
-
+            <div class="card kpi-card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-people-fill fs-1 text-success"></i>
+                    <small class="d-block mt-2 text-muted">Total
+                        Seguidores</small>
+                    <h2>{{ total_seguidores }}</h2>
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-lg-3">
-
-            <div class="card kpi-card">
-
-                <div class="card-body">
-
-                    <small>Red con mayor crecimiento</small>
-
-                    <h2>Facebook</h2>
-
-                    <span class="text-primary">
-
-                        +18%
-
-                    </span>
-
+            <div class="card kpi-card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-mortarboard-fill fs-1 text-primary"></i>
+                    <small class="d-block mt-2 text-muted">Agropecuaria</small>
+                    <h2>{{ total_agropecuaria }}</h2>
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-lg-3">
-
-            <div class="card kpi-card">
-
-                <div class="card-body">
-
-                    <small>Última actualización</small>
-
-                    <h2>Hoy</h2>
-
-                    <span>
-
-                        02/07/2026
-
-                    </span>
-
+            <div class="card kpi-card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-briefcase-fill fs-1 text-warning"></i>
+                    <small class="d-block mt-2 text-muted">Agronegocios</small>
+                    <h2>{{ total_agronegocios }}</h2>
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-lg-3">
-
-            <div class="card kpi-card">
-
-                <div class="card-body">
-
-                    <small>Registros</small>
-
-                    <h2>148</h2>
-
-                    <span>
-
-                        Base de datos
-
-                    </span>
-
+            <div class="card kpi-card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-database-fill fs-1 text-secondary"></i>
+                    <small class="d-block mt-2 text-muted">Registros</small>
+                    <h2>{{ total_registros }}</h2>
                 </div>
-
             </div>
-
         </div>
 
     </div>
 
-    {% include 'components/cards.html' %}
+    <div class="row">
 
-    <div class="row mt-5">
+        <div class="col-lg-8">
 
-        <div class="col-lg-7">
+            <div class="card dashboard-card shadow">
 
-            <div class="card dashboard-card">
+                <div class="card-header bg-success text-white">
+                    Últimos Registros
+                </div>
 
                 <div class="card-body">
 
-                    <h4 class="mb-4">
+                    <div class="table-responsive">
 
-                        <i class="bi bi-clock-history"></i>
+                        <table class="table table-hover align-middle">
 
-                        Últimos registros
+                            <thead>
 
-                    </h4>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Red Social</th>
+                                    <th>Agropecuaria</th>
+                                    <th>Agronegocios</th>
+                                    <th>Agroindustrial</th>
+                                    <th>Total</th>
+                                </tr>
 
-                    <table class="table table-hover">
+                            </thead>
 
-                        <thead>
+                            <tbody>
 
-                            <tr>
+                                {% if registros %}
 
-                                <th>Fecha</th>
+                                {% for registro in registros[:5] %}
 
-                                <th>Red</th>
+                                <tr>
 
-                                <th>Agropecuaria</th>
+                                    <td>{{ registro.fecha }}</td>
 
-                                <th>Agronegocios</th>
+                                    <td>
+                                        <span class="badge bg-success">
+                                            {{ registro.red_social }}
+                                        </span>
+                                    </td>
 
-                                <th>Agroindustrial</th>
+                                    <td>{{ registro.Agropecuaria }}</td>
 
-                            </tr>
+                                    <td>{{ registro.Agronegocios }}</td>
 
-                        </thead>
+                                    <td>{{ registro.Agroindustrial }}</td>
 
-                        <tbody>
+                                    <td>
+                                        <strong>
+                                            {{ registro.Agropecuaria +
+                                            registro.Agronegocios +
+                                            registro.Agroindustrial }}
+                                        </strong>
+                                    </td>
 
-                            <tr>
+                                </tr>
 
-                                <td>02/07/2026</td>
+                                {% endfor %}
 
-                                <td><span
-                                        class="badge bg-primary">Facebook</span></td>
+                                {% else %}
 
-                                <td>3250</td>
+                                <tr>
 
-                                <td>1820</td>
+                                    <td colspan="6" class="text-center">
 
-                                <td>720</td>
+                                        No existen registros.
 
-                            </tr>
+                                    </td>
 
-                            <tr>
+                                </tr>
 
-                                <td>01/07/2026</td>
+                                {% endif %}
 
-                                <td><span
-                                        class="badge bg-danger">Instagram</span></td>
+                            </tbody>
 
-                                <td>3225</td>
+                        </table>
 
-                                <td>1815</td>
-
-                                <td>718</td>
-
-                            </tr>
-
-                            <tr>
-
-                                <td>30/06/2026</td>
-
-                                <td><span
-                                        class="badge bg-dark">TikTok</span></td>
-
-                                <td>3208</td>
-
-                                <td>1810</td>
-
-                                <td>715</td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
+                    </div>
 
                 </div>
 
@@ -213,31 +150,47 @@ Dashboard
 
         </div>
 
-        <div class="col-lg-5">
+        <div class="col-lg-4">
 
-            <div class="card dashboard-card">
+            <div class="card dashboard-card shadow">
+
+                <div class="card-header bg-success text-white">
+                    Seguidores por Carrera
+                </div>
 
                 <div class="card-body">
 
-                    <h4 class="mb-4">
+                    <div style="height:320px;">
 
-                        <i class="bi bi-bar-chart-line-fill"></i>
-
-                        Crecimiento semanal
-
-                    </h4>
-
-                    <div class="chart-placeholder">
-
-                        <i class="bi bi-graph-up-arrow"></i>
-
-                        <p>
-
-                            Aquí aparecerá Chart.js
-
-                        </p>
+                        <canvas
+                            id="graficaSeguidores"
+                            data-agropecuaria="{{ total_agropecuaria }}"
+                            data-agronegocios="{{ total_agronegocios }}"
+                            data-agroindustrial="{{ total_agroindustrial }}">
+                        </canvas>
 
                     </div>
+
+                    <hr>
+
+                    <table class="table">
+
+                        <tr><th>Agropecuaria</th><td>{{ total_agropecuaria
+                                }}</td></tr>
+                        <tr><th>Agronegocios</th><td>{{ total_agronegocios
+                                }}</td></tr>
+                        <tr><th>Agroindustrial</th><td>{{ total_agroindustrial
+                                }}</td></tr>
+
+                        <tr class="table-success">
+
+                            <th>Total General</th>
+
+                            <th>{{ total_seguidores }}</th>
+
+                        </tr>
+
+                    </table>
 
                 </div>
 
