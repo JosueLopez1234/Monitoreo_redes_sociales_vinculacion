@@ -16,7 +16,7 @@ datas += collect_data_files('reportlab')
 
 a = Analysis(
 
-    ['web/app.py'],
+    ['web/run.py'],
 
     pathex=['.'],
 
@@ -26,21 +26,31 @@ a = Analysis(
 
     hiddenimports=[
 
+        'flask',
+
+        'jinja2',
+
+        'sqlite3',
+
+        'csv',
+
+        'openpyxl',
+
         'reportlab',
 
         'reportlab.pdfbase',
 
         'reportlab.platypus',
 
-        'openpyxl',
+        'waitress',
 
-        'csv',
+        'database',
 
-        'sqlite3',
+        'pdf_generator',
 
-        'jinja2',
+        'excel_generator',
 
-        'flask',
+        'csv_generator',
 
     ],
 
@@ -55,6 +65,7 @@ a = Analysis(
     noarchive=False,
 
 )
+
 pyz = PYZ(a.pure)
 
 exe = EXE(
@@ -63,11 +74,9 @@ exe = EXE(
 
     a.scripts,
 
-    a.binaries,
-
-    a.datas,
-
     [],
+
+    exclude_binaries=True,
 
     name='AgroSocialAnalytics',
 
@@ -79,11 +88,7 @@ exe = EXE(
 
     upx=True,
 
-    upx_exclude=[],
-
-    runtime_tmpdir=None,
-
-    console=False,
+    console=True,
 
     disable_windowed_traceback=False,
 
@@ -95,7 +100,7 @@ exe = EXE(
 
     entitlements_file=None,
 
-    icon='web/static/img/logo_uleam.ico'
+    icon='web/static/img/logo_uleam.ico',
 
 )
 
